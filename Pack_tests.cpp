@@ -14,4 +14,11 @@ TEST(test_pack_default_ctor) {
 
 // Add more tests here
 
+TEST(test_default_pack) {
+    Pack pack;
+    for (int i = 0; i < 24; ++i) {
+        cout << pack.deal_one() << endl;
+    }
+}
+
 TEST_MAIN()
