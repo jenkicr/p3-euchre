@@ -92,7 +92,199 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 
 
 /////////////// Write your implementation for Card below ///////////////
+Card::Card() : rank(TWO), suit(SPADES) {}
 
+Card::Card(Rank rank_in, Suit suit_in) : rank(rank_in), suit(suit_in) {}
+
+Rank Card::get_rank() const{
+  return rank;
+}
+
+Suit Card::get_suit() const {
+  return suit;
+}
+Suit Card::get_suit(Suit trump) const {
+  if (is_left_bower(trump)) {
+    return trump;
+  }
+  else {
+    return suit;
+  }
+}
+
+bool Card::is_face_or_ace() const {
+  if (rank >= 9) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool Card::is_right_bower(Suit trump) const {
+  if (suit == trump && rank == 9) {
+    return true;
+  }
+  else 
+    return false;
+} 
+
+bool Card::is_left_bower(Suit trump) const {
+  if (rank == 9 && suit == Suit_next(trump)) {
+    return true;
+  }
+  else {
+    return false;
+  }
+} 
+bool Card::is_trump(Suit trump) const {
+  if (suit == trump || is_left_bower(trump)){
+    return true;
+  }
+  else 
+    return false;
+}
+
+std::ostream& operator<<(std::ostream &os, const Card &card) {
+  os << RANK_NAMES[card.get_rank()] << " of " << SUIT_NAMES[card.get_suit()];
+  return os;
+}
+
+std::istream & operator>>(std::istream &is, Card &card) {
+  string trash;
+  is >> card.rank;
+  is >> trash >> card.suit;
+  return is;
+}
+
+bool operator<(const Card &lhs, const Card &rhs) {
+  if (lhs.get_rank() < rhs.get_rank()) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool operator<=(const Card &lhs, const Card &rhs) {
+  if (lhs.get_rank() <= rhs.get_rank()) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool operator>(const Card &lhs, const Card &rhs) {
+  if (lhs.get_rank() > rhs.get_rank()) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool operator>=(const Card &lhs, const Card &rhs) {
+  if (lhs.get_rank() >= rhs.get_rank()) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool operator==(const Card &lhs, const Card &rhs) {
+  if (lhs.get_rank() == rhs.get_rank() && lhs.get_suit() == lhs.get_suit()) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool operator!=(const Card &lhs, const Card &rhs) {
+  if (lhs.get_rank() == rhs.get_rank() && lhs.get_suit() == lhs.get_suit()) {
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
+Suit Suit_next(Suit suit) {
+  if (suit == SPADES){
+    return CLUBS;
+  }
+  else if (suit == CLUBS) {
+    return SPADES;
+  }
+  else if (suit == DIAMONDS) {
+    return HEARTS;
+  }
+  else {
+    return DIAMONDS; 
+  }
+}
+
+bool Card_less(const Card &a, const Card &b, Suit trump) {
+  if (a.is_right_bower(trump)) {
+    return false;
+  }
+  else if (b.is_right_bower(trump)) {
+    return true;
+  }
+  else if (a.is_left_bower(trump)) {
+    return false;
+  }
+  else if (b.is_left_bower(trump)) {
+    return true;
+  }
+  else if (a.get_suit() == trump && b.get_suit() != trump) {
+    return false;
+  }
+  else if (b.get_suit() == trump && a.get_suit() != trump) {
+    return true;
+  }
+  else if (a < b) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump) {
+  if (a.is_right_bower(trump)) {
+    return false;
+  }
+  else if (b.is_right_bower(trump)) {
+    return true;
+  }
+  else if (a.is_left_bower(trump)) {
+    return false;
+  }
+  else if (b.is_left_bower(trump)) {
+    return true;
+  }
+  else if (a.get_suit() == trump && b.get_suit() != trump) {
+    return false;
+  }
+  else if (b.get_suit() == trump && a.get_suit() != trump) {
+    return true;
+  }
+  else if (a.get_suit() == led_card.get_suit() && b.get_suit() != led_card.get_suit()){
+    return false;
+  }
+  else if (b.get_suit() == led_card.get_suit() && a.get_suit() != led_card.get_suit()){
+    return true;
+  }
+  else if (a < b) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
 
 // NOTE: We HIGHLY recommend you check out the operator overloading
 // tutorial in the project spec before implementing
