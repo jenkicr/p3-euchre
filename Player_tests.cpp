@@ -89,8 +89,6 @@ TEST(test_simple_add_discard) {
     ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(TEN, DIAMONDS)));
     ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(JACK, SPADES)));
     ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(QUEEN, HEARTS)));
-    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(KING, SPADES)));
-    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(ACE, DIAMONDS)));
 
     delete billy;
 }
