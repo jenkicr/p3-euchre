@@ -96,6 +96,7 @@ TEST(test_simple_make_trump) {
     Card upcard7(KING, DIAMONDS);
     ASSERT_TRUE(billy->make_trump(upcard7, false, 2, order_up_suit));
     ASSERT_EQUAL(order_up_suit, HEARTS);
+    delete billy;
 
     // Test case for testing if left bower is seen as trump in r1
     billy = Player_factory("Billy", "Simple");
@@ -107,6 +108,7 @@ TEST(test_simple_make_trump) {
 
     ASSERT_TRUE(billy->make_trump(upcard7, false, 1, order_up_suit));
     ASSERT_EQUAL(order_up_suit, DIAMONDS);
+    delete billy;
 }
 
 TEST(test_simple_make_trump_round_1_success) {
