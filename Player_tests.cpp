@@ -84,6 +84,29 @@ TEST(test_simple_make_trump) {
     ASSERT_TRUE(billy->make_trump(upcard6, true, 2, order_up_suit));
     ASSERT_EQUAL(order_up_suit, DIAMONDS);
     delete billy;
+
+    // Test case for testing if left bower is seen as trump in r2
+    billy = Player_factory("Billy", "Simple");
+    billy->add_card(Card(NINE, DIAMONDS));
+    billy->add_card(Card(TEN, HEARTS));
+    billy->add_card(Card(NINE, SPADES));
+    billy->add_card(Card(TEN, CLUBS));
+    billy->add_card(Card(JACK, DIAMONDS));
+
+    Card upcard7(KING, DIAMONDS);
+    ASSERT_TRUE(billy->make_trump(upcard7, false, 2, order_up_suit));
+    ASSERT_EQUAL(order_up_suit, HEARTS);
+
+    // Test case for testing if left bower is seen as trump in r1
+    billy = Player_factory("Billy", "Simple");
+    billy->add_card(Card(QUEEN, DIAMONDS));
+    billy->add_card(Card(TEN, HEARTS));
+    billy->add_card(Card(NINE, SPADES));
+    billy->add_card(Card(TEN, CLUBS));
+    billy->add_card(Card(JACK, HEARTS));
+
+    ASSERT_TRUE(billy->make_trump(upcard7, false, 1, order_up_suit));
+    ASSERT_EQUAL(order_up_suit, DIAMONDS);
 }
 
 TEST(test_simple_make_trump_round_1_success) {
@@ -133,6 +156,8 @@ TEST(test_simple_add_discard) {
     ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(TEN, DIAMONDS)));
     ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(JACK, SPADES)));
     ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(QUEEN, HEARTS)));
+    ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(KING, SPADES)));
+    ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(ACE, DIAMONDS)));
     
     delete billy;
 
