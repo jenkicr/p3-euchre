@@ -153,13 +153,13 @@ class HumanPlayer : public Player {
             cout << "Human player " << name << ", please select a card to discard:\n";
             int card_int;
             cin >> card_int;
+            cout << "card_int: " << card_int << endl;
             if (card_int == -1) {
-                hand.erase(hand.end());
+                hand.pop_back();  // Use pop_back instead of erase
             }
-            else {
-                hand.erase(hand.begin() + card_int-1);
+            else if (card_int >= 0 && card_int < static_cast<int>(hand.size())) {
+                hand.erase(hand.begin() + card_int);  // Remove the off-by-one error
             }
-            
         }
         
         bool make_trump(const Card &upcard, bool is_dealer,
@@ -182,6 +182,7 @@ class HumanPlayer : public Player {
             cout << "Human player " << name << ", please select a card:" << endl;
             int card_int;
             cin >> card_int;
+            assert(card_int >= 0 && card_int < hand.size());
             Card card = hand[card_int];
             hand.erase(hand.begin() + card_int);
             return card;
@@ -192,6 +193,7 @@ class HumanPlayer : public Player {
             cout << "Human player " << name << ", please select a card:" << endl;
             int card_int;
             cin >> card_int;
+            assert(card_int >= 0 && card_int < hand.size());
             Card card = hand[card_int];
             hand.erase(hand.begin() + card_int);
             return card;
@@ -213,7 +215,6 @@ std::ostream & operator<<(std::ostream &os, const Player &p) {
     os << p.get_name();
     return os;
 }
-
 
 
 
