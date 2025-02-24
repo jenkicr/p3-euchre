@@ -183,7 +183,6 @@ class HumanPlayer : public Player {
             cout << "Human player " << name << ", please select a card:" << endl;
             int card_int;
             cin >> card_int;
-            assert(card_int >= 0 && card_int < hand.size());
             Card card = hand[card_int];
             hand.erase(hand.begin() + card_int);
             return card;
@@ -194,7 +193,6 @@ class HumanPlayer : public Player {
             cout << "Human player " << name << ", please select a card:" << endl;
             int card_int;
             cin >> card_int;
-            assert(card_int >= 0 && card_int < hand.size());
             Card card = hand[card_int];
             hand.erase(hand.begin() + card_int);
             return card;

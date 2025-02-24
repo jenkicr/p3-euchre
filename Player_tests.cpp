@@ -90,28 +90,53 @@ TEST(test_simple_lead_card) {
     delete billy;
 }
 TEST(test_human_add_discard) {
-    Player * charlie = Player_factory("Charlie", "Human");
+    Player * charlie1 = Player_factory("Charlie", "Human");
     Card led_card(TEN, CLUBS);
     Card upcard(KING, SPADES);
-    charlie->add_card(Card(NINE, HEARTS));
-    charlie->add_card(Card(TEN, DIAMONDS));
-    charlie->add_card(Card(JACK, SPADES));
-    charlie->add_card(Card(QUEEN, HEARTS));
-    charlie->add_card(Card(ACE, DIAMONDS));
+    charlie1->add_card(Card(NINE, HEARTS));
+    charlie1->add_card(Card(TEN, DIAMONDS));
+    charlie1->add_card(Card(JACK, SPADES));
+    charlie1->add_card(Card(QUEEN, HEARTS));
+    charlie1->add_card(Card(ACE, DIAMONDS));
     
-    charlie->add_and_discard(upcard);
+    charlie1->add_and_discard(upcard);
     // human inserts -1
-    ASSERT_TRUE((charlie->play_card(led_card, DIAMONDS)) == (Card(NINE, HEARTS)));
+    ASSERT_TRUE((charlie1->play_card(led_card, DIAMONDS)) == (Card(NINE, HEARTS)));
     //human inserts 0
-    ASSERT_TRUE((charlie->play_card(led_card, DIAMONDS)) == (Card(TEN, DIAMONDS)));
+    ASSERT_TRUE((charlie1->play_card(led_card, DIAMONDS)) == (Card(TEN, DIAMONDS)));
     //human inserts 0
-    ASSERT_TRUE((charlie->play_card(led_card, DIAMONDS)) == (Card(JACK, SPADES)));
+    ASSERT_TRUE((charlie1->play_card(led_card, DIAMONDS)) == (Card(JACK, SPADES)));
     //human inserts 0
-    ASSERT_TRUE((charlie->play_card(led_card, DIAMONDS)) == (Card(QUEEN, HEARTS)));
+    ASSERT_TRUE((charlie1->play_card(led_card, DIAMONDS)) == (Card(QUEEN, HEARTS)));
     //human inserts 0
-    ASSERT_TRUE((charlie->play_card(led_card, DIAMONDS)) == (Card(ACE, DIAMONDS)));
+    ASSERT_TRUE((charlie1->play_card(led_card, DIAMONDS)) == (Card(ACE, DIAMONDS)));
     //human inserts 0
-    delete charlie;
+    delete charlie1;
+
+    Player * charlie2 = Player_factory("Charlie", "Human");
+
+    charlie2->add_card(Card(NINE, HEARTS));
+    charlie2->add_card(Card(TEN, DIAMONDS));
+    charlie2->add_card(Card(JACK, SPADES));
+    charlie2->add_card(Card(QUEEN, HEARTS));
+    charlie2->add_card(Card(ACE, DIAMONDS));
+    
+    charlie2->add_and_discard(upcard);
+    //human inserts 2
+    ASSERT_TRUE((charlie2->play_card(led_card, DIAMONDS)) == (Card(NINE, HEARTS)));
+    //human inserts 0
+    ASSERT_TRUE((charlie2->play_card(led_card, DIAMONDS)) == (Card(TEN, DIAMONDS)));
+    //human inserts 0
+    ASSERT_TRUE((charlie2->play_card(led_card, DIAMONDS)) == (Card(QUEEN, HEARTS)));
+    //human inserts 0
+    ASSERT_TRUE((charlie2->play_card(led_card, DIAMONDS)) == (upcard));
+    //human inserts 0
+    ASSERT_TRUE((charlie2->play_card(led_card, DIAMONDS)) == (Card(ACE, DIAMONDS)));
+    //human inserts 0
+    delete charlie2;
+
+
+
 }
 TEST(test_human_lead_card) {
     Player * charlie = Player_factory("Charlie", "Human");
@@ -120,6 +145,8 @@ TEST(test_human_lead_card) {
     Card card = charlie->lead_card(DIAMONDS);
     // human inserts 0
     ASSERT_TRUE(c == card);
+
+
     delete charlie;
 }
 //Human Player Tests
