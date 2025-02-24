@@ -121,6 +121,8 @@ TEST(test_card_less_led) {
     ASSERT_TRUE(Card_less(c2, c3, led_card1, HEARTS));
     ASSERT_FALSE(Card_less(c2, c3, led_card1, CLUBS));
     ASSERT_TRUE(Card_less(c5, c4, led_card2, SPADES)); 
+    ASSERT_FALSE(Card_less(Card(ACE,DIAMONDS),Card(ACE,DIAMONDS), led_card2, SPADES));
+    ASSERT_TRUE(Card_less(Card(JACK,CLUBS),Card(JACK,SPADES), led_card2, HEARTS));
 }
 
 TEST_MAIN()
