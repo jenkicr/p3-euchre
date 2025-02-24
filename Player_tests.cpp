@@ -12,6 +12,7 @@ TEST(test_player_get_name) {
 }
 
 TEST(test_simple_make_trump) {
+    // Original test
     Player * billy = Player_factory("Billy", "Simple");
     Card c(TEN, DIAMONDS);
     billy->add_card(c);
@@ -30,6 +31,58 @@ TEST(test_simple_make_trump) {
     ASSERT_TRUE(order_up_suit == SPADES);
     ASSERT_TRUE(billy->make_trump(upcard1, true, 2, order_up_suit));
     ASSERT_TRUE(order_up_suit == DIAMONDS);
+    delete billy;
+
+    // Test case for exactly 2 face cards of trump suit in round 1
+    billy = Player_factory("Billy", "Simple");
+    billy->add_card(Card(JACK, HEARTS));
+    billy->add_card(Card(QUEEN, HEARTS));
+    billy->add_card(Card(NINE, SPADES));
+    billy->add_card(Card(TEN, DIAMONDS));
+    billy->add_card(Card(NINE, CLUBS));
+    
+    Card upcard3(NINE, HEARTS);
+    ASSERT_TRUE(billy->make_trump(upcard3, false, 1, order_up_suit));
+    ASSERT_EQUAL(order_up_suit, HEARTS);
+    delete billy;
+
+    // Test case for right bower counting as trump suit in round 1
+    billy = Player_factory("Billy", "Simple");
+    billy->add_card(Card(JACK, HEARTS));  // Right bower
+    billy->add_card(Card(JACK, DIAMONDS)); // Left bower
+    billy->add_card(Card(NINE, SPADES));
+    billy->add_card(Card(TEN, CLUBS));
+    billy->add_card(Card(NINE, CLUBS));
+    
+    Card upcard4(NINE, HEARTS);
+    ASSERT_TRUE(billy->make_trump(upcard4, false, 1, order_up_suit));
+    ASSERT_EQUAL(order_up_suit, HEARTS);
+    delete billy;
+
+    // Test case for round 2 with exactly 1 face card of next suit
+    billy = Player_factory("Billy", "Simple");
+    billy->add_card(Card(KING, DIAMONDS)); // Next suit face card
+    billy->add_card(Card(NINE, HEARTS));
+    billy->add_card(Card(TEN, SPADES));
+    billy->add_card(Card(NINE, CLUBS));
+    billy->add_card(Card(TEN, CLUBS));
+    
+    Card upcard5(NINE, HEARTS);
+    ASSERT_TRUE(billy->make_trump(upcard5, false, 2, order_up_suit));
+    ASSERT_EQUAL(order_up_suit, DIAMONDS);
+    delete billy;
+
+    // Test case for round 2 with no face cards but is dealer
+    billy = Player_factory("Billy", "Simple");
+    billy->add_card(Card(NINE, DIAMONDS));
+    billy->add_card(Card(TEN, HEARTS));
+    billy->add_card(Card(NINE, SPADES));
+    billy->add_card(Card(TEN, CLUBS));
+    billy->add_card(Card(NINE, CLUBS));
+    
+    Card upcard6(NINE, HEARTS);
+    ASSERT_TRUE(billy->make_trump(upcard6, true, 2, order_up_suit));
+    ASSERT_EQUAL(order_up_suit, DIAMONDS);
     delete billy;
 }
 
@@ -64,20 +117,54 @@ TEST(test_simple_play_card) {
 }
 
 TEST(test_simple_add_discard) {
+    // Test 1: Basic discard functionality
     Player * billy = Player_factory("Billy", "Simple");
     Card led_card(TEN, CLUBS);
     Card upcard(KING, SPADES);
-    billy->add_card(Card(TEN, DIAMONDS));
+
     billy->add_card(Card(NINE, HEARTS));
+    billy->add_card(Card(TEN, DIAMONDS));
     billy->add_card(Card(JACK, SPADES));
     billy->add_card(Card(ACE, DIAMONDS));
     billy->add_card(Card(QUEEN, HEARTS));
+
     billy->add_and_discard(upcard);
-    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(TEN, DIAMONDS)));
-    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(JACK, SPADES)));
-    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(QUEEN, HEARTS)));
-    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(KING, SPADES)));
-    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(ACE, DIAMONDS)));
+
+    ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(TEN, DIAMONDS)));
+    ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(JACK, SPADES)));
+    ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(QUEEN, HEARTS)));
+    
+    delete billy;
+
+    // Test 2: Upcard is higher than lowest trump
+    billy = Player_factory("Billy", "Simple");
+    Card upcard2(ACE, HEARTS);
+    
+    billy->add_card(Card(NINE, HEARTS));  // Queen of Clubs should be discarded
+    billy->add_card(Card(TEN, HEARTS));
+    billy->add_card(Card(JACK, DIAMONDS));
+    billy->add_card(Card(QUEEN, CLUBS));
+    billy->add_card(Card(KING, SPADES));
+
+    billy->add_and_discard(upcard2);
+    
+    Card played = billy->play_card(led_card, HEARTS);
+    ASSERT_TRUE(played == Card(NINE, HEARTS));  // Queen of Clubs should be discarded  
+    delete billy;
+
+    // Test 3: Upcard is lowest trump
+    billy = Player_factory("Billy", "Simple");
+    Card upcard3(NINE, DIAMONDS);
+    
+    billy->add_card(Card(JACK, DIAMONDS));
+    billy->add_card(Card(QUEEN, DIAMONDS));
+    billy->add_card(Card(KING, HEARTS));
+    billy->add_card(Card(ACE, CLUBS));
+    billy->add_card(Card(TEN, SPADES));
+
+    billy->add_and_discard(upcard3); //Ten of Spades should be discarded
+    
+    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(ACE, CLUBS)));    
     delete billy;
 }
 
