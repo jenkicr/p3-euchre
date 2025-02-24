@@ -98,6 +98,7 @@ public:
     void add_and_discard(const Card &upcard) {
         assert(hand.size() > 1);
         hand.push_back(upcard); // adds upcard to hand
+        sort(hand.begin(), hand.end());
       
         Card min = hand[0];
         int index = 0;
