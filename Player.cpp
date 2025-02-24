@@ -147,18 +147,19 @@ class HumanPlayer : public Player {
             sort(hand.begin(), hand.end());
         }
         void add_and_discard(const Card &upcard) {
-            hand.push_back(upcard);
+            sort(hand.begin(), hand.end());
             print_hand();
+            hand.push_back(upcard);
             cout << "Discard upcard: [-1]\n";
             cout << "Human player " << name << ", please select a card to discard:\n";
             int card_int;
             cin >> card_int;
-            cout << "card_int: " << card_int << endl;
             if (card_int == -1) {
                 hand.pop_back();  // Use pop_back instead of erase
             }
-            else if (card_int >= 0 && card_int < static_cast<int>(hand.size())) {
+            else if (card_int >= 0 && card_int < hand.size()) {
                 hand.erase(hand.begin() + card_int);  // Remove the off-by-one error
+                sort(hand.begin(), hand.end());
             }
         }
         
