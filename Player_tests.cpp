@@ -21,9 +21,11 @@ TEST(test_simple_make_trump) {
     billy->add_card(Card(QUEEN, HEARTS));
     Card upcard1(NINE, HEARTS);
     Card upcard2(JACK, CLUBS);
+
     Suit order_up_suit;
     ASSERT_FALSE(billy->make_trump(upcard1, false, 1, order_up_suit));
     ASSERT_FALSE(billy->make_trump(upcard2, false, 1, order_up_suit));
+    ASSERT_FALSE(billy->make_trump(upcard2, true, 1, order_up_suit));
     ASSERT_TRUE(billy->make_trump(upcard2, false, 2, order_up_suit));
     ASSERT_TRUE(order_up_suit == SPADES);
     ASSERT_TRUE(billy->make_trump(upcard1, true, 2, order_up_suit));
@@ -74,6 +76,8 @@ TEST(test_simple_add_discard) {
     ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(TEN, DIAMONDS)));
     ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(JACK, SPADES)));
     ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(QUEEN, HEARTS)));
+    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(KING, SPADES)));
+    ASSERT_TRUE((billy->play_card(led_card, DIAMONDS)) == (Card(ACE, DIAMONDS)));
     delete billy;
 }
 
