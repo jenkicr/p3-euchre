@@ -6,5 +6,5 @@
 0
 0
 pass
-diamonds
+Diamonds
 
