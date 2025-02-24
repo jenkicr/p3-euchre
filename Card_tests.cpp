@@ -10,6 +10,12 @@ TEST(test_card_ctor) {
     ASSERT_EQUAL(ACE, c.get_rank());
     ASSERT_EQUAL(HEARTS, c.get_suit());
 }
+TEST(test_card_get_suit_with_trump) {
+    Card c(JACK, SPADES);
+    Card c2(JACK, CLUBS);
+    ASSERT_EQUAL(SPADES, c.get_suit(SPADES));
+    ASSERT_EQUAL(SPADES, c2.get_suit(SPADES));
+}
 
 // Add more test cases here
 TEST(test_card_default_ctor) {

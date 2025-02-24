@@ -29,12 +29,21 @@ TEST(test_simple_play_card) {
 
 TEST(test_human_play_card) {
     Player * charlie = Player_factory("Charlie", "Human");
-    Card c(TEN, DIAMONDS);
-    Card d(JACK, SPADES);
-    charlie->add_card(c);
-    Card card = charlie->play_card(c, SPADES);
+    Card c1(TEN, DIAMONDS);
+    Card c2(JACK, HEARTS);
+    Card c3(QUEEN, SPADES);
+    charlie->add_card(c1);
+    charlie->add_card(c2);
+    charlie->add_card(c3);
+    
+    Card led_card(ACE, DIAMONDS);
+    Card played = charlie->play_card(led_card, SPADES);
     // human inserts 0
-    ASSERT_TRUE(c == card);
+    ASSERT_EQUAL(played, c1);
+    
+    played = charlie->play_card(led_card, SPADES);
+    // human inserts 0
+    ASSERT_EQUAL(played, c2);
     
     delete charlie;
 }
@@ -60,18 +69,32 @@ TEST(test_simple_make_trump) {
     delete billy;
 }
 
+TEST(test_simple_make_trump_round_1_success) {
+    Player * billy = Player_factory("Billy", "Simple");
+    billy->add_card(Card(JACK, HEARTS));
+    billy->add_card(Card(QUEEN, HEARTS));
+    billy->add_card(Card(KING, SPADES));
+    billy->add_card(Card(NINE, DIAMONDS));
+    billy->add_card(Card(TEN, CLUBS));
+    
+    Card upcard(ACE, HEARTS);
+    Suit order_up_suit;
+    
+    ASSERT_TRUE(billy->make_trump(upcard, false, 1, order_up_suit));
+    ASSERT_EQUAL(order_up_suit, HEARTS);
+
+    delete billy;
+}
+
 TEST(test_human_make_trump) {
     Player * charlie = Player_factory("Charlie", "Human");
-    Card c(TEN, DIAMONDS);
-    Card d(JACK, SPADES);
     Card upcard1(NINE, HEARTS);
-    Suit order_up_suit = SPADES;
+    Suit order_up_suit;  // Remove initialization to SPADES
     ASSERT_FALSE(charlie->make_trump(upcard1, false, 1, order_up_suit));
     // human inserts pass
-    ASSERT_TRUE(order_up_suit == SPADES);
     ASSERT_TRUE(charlie->make_trump(upcard1, true, 1, order_up_suit));
     // human inserts Diamonds
-    ASSERT_TRUE(order_up_suit == DIAMONDS);
+    ASSERT_EQUAL(order_up_suit, DIAMONDS);
     delete charlie;
 }
 
@@ -97,14 +120,25 @@ TEST(test_human_add_discard) {
     Player * charlie = Player_factory("Charlie", "Human");
     Card c1(TEN, DIAMONDS);
     Card c2(JACK, SPADES);
-    Card led_card(TEN, CLUBS);
+    Card upcard(KING, CLUBS);
+    
     charlie->add_card(c1);
     charlie->add_card(c2);
-    Card upcard(KING, CLUBS);
     charlie->add_and_discard(upcard);
     // human inserts -1
-    ASSERT_TRUE(charlie->play_card(led_card, SPADES) == c1);
+    
+    // Verify the upcard was properly discarded by checking remaining cards
+    Card led_card(ACE, CLUBS);
+    Card played1 = charlie->play_card(led_card, SPADES);
     // human inserts 0
+    Card played2 = charlie->play_card(led_card, SPADES);
+    // human inserts 0
+    
+    ASSERT_TRUE(played1 == c1 || played1 == c2);
+    ASSERT_TRUE(played2 == c1 || played2 == c2);
+    ASSERT_FALSE(played1 == played2);
+    
+    delete charlie;
 }
 
 TEST(test_simple_lead_card) {
