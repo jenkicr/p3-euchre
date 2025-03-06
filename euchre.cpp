@@ -3,6 +3,8 @@
 
 using namespace std;
 
+ // Game ADT (private variables + public play function)
+
 int main(int argc, char* argv[]) {
 
     if (argc != 12) {
@@ -12,7 +14,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // do other checks
 
+
+    // play game
 
 
 
