@@ -323,4 +323,3 @@ int main(int argc, char* argv[]) {
 }
 
 // issues: players aren't playing the right cards...
-// and cards aren't being removed correctly (or something like that)
