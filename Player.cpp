@@ -112,7 +112,7 @@ public:
     }
 
     Card lead_card(Suit trump) {
-        assert(hand.size() > 1);
+        assert(hand.size() >= 1);
         
         sort(hand.begin(), hand.end());
         for (int i = hand.size() - 1; i >= 0; i--) {
