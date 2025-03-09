@@ -117,10 +117,14 @@ public:
         sort(hand.begin(), hand.end());
         for (int i = hand.size() - 1; i >= 0; i--) {
             if (!(hand[i].is_trump(trump))) {
-                return hand[i];
+                Card led_card = hand[i];
+                hand.erase(hand.begin() + i);
+                return led_card;
             }
         }
-        return hand[hand.size()-1];
+        Card led_card = hand[hand.size() - 1];
+        hand.erase(hand.begin() + (hand.size() - 1));
+        return led_card;
     }
 };
 

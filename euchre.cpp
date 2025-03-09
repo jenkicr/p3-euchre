@@ -30,41 +30,41 @@ using namespace std;
         }
         
         void deal(int dealer) {
-            int current_player = dealer;
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
+            int current_player = player_to_left(dealer);
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
 
             current_player = player_to_left(current_player);
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
 
             current_player = player_to_left(current_player);
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
 
             current_player = player_to_left(current_player);
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
 
             current_player = player_to_left(current_player);
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
 
             current_player = player_to_left(current_player);
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
 
             current_player = player_to_left(current_player);
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
 
             current_player = player_to_left(current_player);
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
-            Players[player_to_left(current_player)]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
+            Players[current_player]->add_card(pack.deal_one());
 
         }
 
@@ -87,7 +87,24 @@ using namespace std;
 
         int play_trick(int leader, Suit trump) {
             vector<Card> trick;
-            int current_player = leader;
+            Card led_card = Players[leader]->lead_card(trump);
+            trick.push_back(led_card);
+            cout << led_card << " led by " << *Players[leader] << endl;
+            Card best_card = led_card;
+            int j = 0;
+            int trick_winner = leader;
+            for (int i = player_to_left(leader); j < 3; i = player_to_left(i)) {
+                trick.push_back(Players[i]->play_card(trick[0], trump));
+                cout << trick[j + 1] << " played by " << *Players[i] << endl;
+                if (Card_less(best_card, trick[j + 1], led_card, trump)) {
+                    best_card = trick[j + 1];
+                    trick_winner = i;
+                    cout << trick_winner << endl;
+                }
+                ++j;
+            }
+
+            /* old code here
             Card led_card = Players[current_player]->lead_card(trump);
             trick.push_back(led_card);
             cout << led_card << " led by " << *Players[current_player] << endl;
@@ -118,6 +135,7 @@ using namespace std;
                 }
                 ++j;
             }
+            */
             
             cout << *Players[trick_winner] << " takes the trick" << endl << endl;
             return trick_winner;
@@ -127,7 +145,7 @@ using namespace std;
             if (order_up_team == 1) {
                 if (team1_tricks == 3 || team1_tricks == 4) {
                     cout << *Players[0] << " and " << *Players[2] << " win the hand" << endl;
-                    ++score1;
+                    score1 += 1;
                 }
                 else if (team1_tricks == 5) {
                     score1 += 2;
@@ -143,7 +161,7 @@ using namespace std;
             else if (order_up_team == 2) {
                 if (team2_tricks == 3 || team2_tricks == 4) {
                     cout << *Players[1] << " and " << *Players[3] << " win the hand" << endl;
-                    ++score2;
+                    score2 += 1;
                 }
                 else if (team2_tricks == 5) {
                     score2 += 2;
@@ -170,7 +188,6 @@ using namespace std;
             int team2_score = 0;
             int hand_count = 0;
             bool game_end = false;
-            cout << points_to_win << endl;
             while(!game_end) { 
                 cout << "Hand " << hand_count << endl;
                 cout << *Players[dealer] << " deals" << endl;
@@ -194,21 +211,21 @@ using namespace std;
                 Suit &trump_suit = order_up_suit;
                 int team1_trickswon = 0;
                 int team2_trickswon = 0;
-                int trick_winner = player_to_left(dealer);
+                int leader = player_to_left(dealer);
                 for (int i = 0; i < 5; ++i) {
-                    trick_winner = play_trick(trick_winner, trump_suit);
-                    if (trick_winner % 2 == 0) {
+                    leader = play_trick(leader, trump_suit);
+                    if (leader % 2 == 0) {
                         ++team1_trickswon;
                     }
                     else {
                        ++team2_trickswon;
                     }
                 }
-                cout << team1_trickswon << " " << team2_trickswon << endl;
+                
                 score(team1_trickswon, team2_trickswon, order_up_team, team1_score, team2_score);
 
                 cout << *Players[0] << " and " << *Players[2] << " have " << team1_score << " points" << endl;
-                cout << *Players[1] << " and " << *Players[3] << " have " << team1_score << " points" << endl;
+                cout << *Players[1] << " and " << *Players[3] << " have " << team2_score << " points" << endl;
                 if (team1_score >= points_to_win) {
                     game_end = true;
                     cout << *Players[0] << " and " << *Players[2] << " win!" << endl;
@@ -304,3 +321,6 @@ int main(int argc, char* argv[]) {
     Game game(players, game_pack, points_to_win, shuffle_on);
     game.play();
 }
+
+// issues: players aren't playing the right cards...
+// and cards aren't being removed correctly (or something like that)
