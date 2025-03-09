@@ -220,10 +220,6 @@ using namespace std;
 
                 dealer = player_to_left(dealer);
                 pack.reset();
-                // we need to empty their hands
-                for (int i = 0; i < 4; ++i) {
-                    // erase their hands one by one, not sure how to access it
-                }
                 hand_count++;
             }
 
