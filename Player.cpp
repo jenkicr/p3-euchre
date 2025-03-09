@@ -88,9 +88,16 @@ public:
             return highest_card;
         }
         else {
-            Card card = hand[0];
-            hand.erase(hand.begin());
-            return card;
+            Card lowest_card = hand[0];
+            int index = 0;
+            for (int i = 0; i < hand.size()-1; i++) {
+                if (Card_less(hand[i+1], hand[i], trump)) {
+                    lowest_card = hand[i+1];
+                    index = i;
+                }
+            }
+            hand.erase(hand.begin() + index);
+            return lowest_card;
         }
         
     }

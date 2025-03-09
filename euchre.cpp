@@ -73,7 +73,9 @@ using namespace std;
             for (int i = player_to_left(dealer); j < 4; i = player_to_left(i)) {
                 bool is_dealer = j == 3;
                 if (Players[i]->make_trump(upcard, is_dealer, round, order_up_suit)) {
-                    Players[i]->add_and_discard(upcard);
+                    if (round == 1) {
+                        Players[i]->add_and_discard(upcard);
+                    }
                     j = 4;
                     player = i;
                     cout << *Players[i] << " orders up " << order_up_suit << endl << endl;
@@ -99,7 +101,6 @@ using namespace std;
                 if (Card_less(best_card, trick[j + 1], led_card, trump)) {
                     best_card = trick[j + 1];
                     trick_winner = i;
-                    cout << trick_winner << endl;
                 }
                 ++j;
             }
