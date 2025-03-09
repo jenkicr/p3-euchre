@@ -170,6 +170,7 @@ using namespace std;
             int team2_score = 0;
             int hand_count = 0;
             bool game_end = false;
+            cout << points_to_win << endl;
             while(!game_end) { 
                 cout << "Hand " << hand_count << endl;
                 cout << *Players[dealer] << " deals" << endl;
@@ -219,6 +220,10 @@ using namespace std;
 
                 dealer = player_to_left(dealer);
                 pack.reset();
+                // we need to empty their hands
+                for (int i = 0; i < 4; ++i) {
+                    // erase their hands one by one, not sure how to access it
+                }
                 hand_count++;
             }
 
