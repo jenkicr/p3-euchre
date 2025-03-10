@@ -91,7 +91,7 @@ public:
             Card lowest_card = hand[0];
             int index = 0;
             for (int i = 0; i < hand.size()-1; i++) {
-                if (Card_less(hand[i+1], hand[i], trump)) {
+                if (Card_less(hand[i+1], hand[i], led_card, trump)) {
                     lowest_card = hand[i+1];
                     index = i;
                 }
