@@ -74,11 +74,14 @@ using namespace std;
                 bool is_dealer = j == 3;
                 if (Players[i]->make_trump(upcard, is_dealer, round, order_up_suit)) {
                     if (round == 1) {
-                        Players[i]->add_and_discard(upcard);
+                        cout << *Players[i] << " orders up " << order_up_suit << endl << endl;
+                        Players[dealer]->add_and_discard(upcard);
+                    }
+                    else {
+                        cout << *Players[i] << " orders up " << order_up_suit << endl << endl;
                     }
                     j = 4;
                     player = i;
-                    cout << *Players[i] << " orders up " << order_up_suit << endl << endl;
                     return true;
                 }
                 cout << *Players[i] << " passes" << endl;
@@ -226,7 +229,7 @@ using namespace std;
                 score(team1_trickswon, team2_trickswon, order_up_team, team1_score, team2_score);
 
                 cout << *Players[0] << " and " << *Players[2] << " have " << team1_score << " points" << endl;
-                cout << *Players[1] << " and " << *Players[3] << " have " << team2_score << " points" << endl;
+                cout << *Players[1] << " and " << *Players[3] << " have " << team2_score << " points" << endl << endl;
                 if (team1_score >= points_to_win) {
                     game_end = true;
                     cout << *Players[0] << " and " << *Players[2] << " win!" << endl;
@@ -319,6 +322,9 @@ int main(int argc, char* argv[]) {
     ifstream pack;
     pack.open(filename);
     Pack game_pack = Pack(pack);
+    cout << argv[0] << " " << argv[1] << " " << argv[2] << " " << argv[3] << " " << argv[4] 
+    << " " << argv[5] << " " << argv[6] << " " << argv[7] << " " << argv[8] << " " << argv[9] << " "
+    << argv[10] << " " << argv[11] << " " << endl;
     Game game(players, game_pack, points_to_win, shuffle_on);
     game.play();
 }

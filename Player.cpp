@@ -68,7 +68,7 @@ public:
         assert(hand.size() >= 1);
         int count_same_suit = 0;
         for (int i = 0; i < hand.size(); i++) {
-            if (hand[i].get_suit() == led_card.get_suit()) {
+            if (hand[i].get_suit(trump) == led_card.get_suit(trump)) {
                 count_same_suit++;
             }
         }
@@ -76,11 +76,19 @@ public:
         if (count_same_suit > 0) {
             Card highest_card;
             for (int i = 0; i < hand.size(); i++) {
-                if (hand[i].get_suit() == led_card.get_suit()) {
-                    if (hand[i] > highest_card) {
+                if (hand[i].get_suit(trump) == led_card.get_suit(trump)) {
+                    if (hand[i].is_right_bower(trump)) {
                         highest_card = hand[i];
                         index = i;
-
+                    }
+                    else if (hand[i].is_left_bower(trump) && !highest_card.is_right_bower(trump)) {
+                        highest_card = hand[i];
+                        index = i;
+                    }
+                    else if (hand[i] > highest_card && !highest_card.is_left_bower(trump) && 
+                    !highest_card.is_right_bower(trump)) {
+                        highest_card = hand[i];
+                        index = i;
                     }
                 }
             }
@@ -91,9 +99,9 @@ public:
             Card lowest_card = hand[0];
             int index = 0;
             for (int i = 0; i < hand.size()-1; i++) {
-                if (Card_less(hand[i+1], lowest_card, led_card, trump)) {
+                if (Card_less(hand[i+1], lowest_card, trump)) {
                     lowest_card = hand[i+1];
-                    index = i;
+                    index = i + 1;
                 }
             }
             hand.erase(hand.begin() + index);
@@ -129,9 +137,16 @@ public:
                 return led_card;
             }
         }
-        Card led_card = hand[hand.size() - 1];
-        hand.erase(hand.begin() + (hand.size() - 1));
-        return led_card;
+        Card highest_card = hand[0];
+        int index = 0;
+        for (int i = 0; i < hand.size() - 1; ++i) {
+            if (Card_less(highest_card, hand[i + 1], trump)) {
+                highest_card = hand[i+1];
+                index = i + 1;
+            }
+        }
+        hand.erase(hand.begin() + index);
+        return highest_card;
     }
 };
 
@@ -163,7 +178,7 @@ class HumanPlayer : public Player {
             print_hand();
             hand.push_back(upcard);
             cout << "Discard upcard: [-1]\n";
-            cout << "Human player " << name << ", please select a card to discard:\n";
+            cout << "Human player " << name << ", please select a card to discard:\n" << endl;
             int card_int;
             cin >> card_int;
             if (card_int == -1) {

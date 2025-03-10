@@ -176,7 +176,7 @@ TEST(test_simple_add_discard) {
     billy->add_and_discard(upcard2);
     
     Card played = billy->play_card(led_card, HEARTS);
-    ASSERT_TRUE(played == Card(NINE, HEARTS));  // Queen of Clubs should be discarded  
+    ASSERT_TRUE(played == Card(KING, SPADES));  // Queen of Clubs should be discarded  
     delete billy;
 
     // Test 3: Upcard is lowest trump
