@@ -154,7 +154,7 @@ TEST(test_simple_add_discard) {
     billy->add_card(Card(QUEEN, HEARTS));
 
     billy->add_and_discard(upcard);
-    cout << billy->play_card(led_card, SPADES) << endl;
+
     ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(TEN, DIAMONDS)));
     ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(QUEEN, HEARTS)));
     ASSERT_TRUE((billy->play_card(led_card, SPADES)) == (Card(ACE, DIAMONDS)));
