@@ -31,41 +31,14 @@ using namespace std;
         
         void deal(int dealer) {
             int current_player = player_to_left(dealer);
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-
-            current_player = player_to_left(current_player);
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-
-            current_player = player_to_left(current_player);
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-
-            current_player = player_to_left(current_player);
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-
-            current_player = player_to_left(current_player);
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-
-            current_player = player_to_left(current_player);
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-
-            current_player = player_to_left(current_player);
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-
-            current_player = player_to_left(current_player);
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-            Players[current_player]->add_card(pack.deal_one());
-
+            const int CARDS_PATTERN[8] = {3,2,3,2,2,3,2,3}; // Full dealing pattern
+            
+            for(int i = 0; i < 8; ++i) {
+                for(int j = 0; j < CARDS_PATTERN[i]; ++j) {
+                    Players[current_player]->add_card(pack.deal_one());
+                }
+                current_player = player_to_left(current_player);
+            }
         }
 
         bool make_trump(int round, Suit &order_up_suit, int &player, int dealer, Card upcard) {
