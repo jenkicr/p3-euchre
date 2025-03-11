@@ -41,17 +41,20 @@ using namespace std;
             }
         }
 
-        bool make_trump(int round, Suit &order_up_suit, int &player, int dealer, Card upcard) {
+        bool make_trump(int round, Suit &order_up_suit, 
+            int &player, int dealer, Card upcard) {
             int j = 0;
             for (int i = player_to_left(dealer); j < 4; i = player_to_left(i)) {
                 bool is_dealer = j == 3;
                 if (Players[i]->make_trump(upcard, is_dealer, round, order_up_suit)) {
                     if (round == 1) {
-                        cout << *Players[i] << " orders up " << order_up_suit << endl << endl;
+                        cout << *Players[i] << " orders up " 
+                        << order_up_suit << endl << endl;
                         Players[dealer]->add_and_discard(upcard);
                     }
                     else {
-                        cout << *Players[i] << " orders up " << order_up_suit << endl << endl;
+                        cout << *Players[i] << " orders up " 
+                        << order_up_suit << endl << endl;
                     }
                     j = 4;
                     player = i;
@@ -79,75 +82,48 @@ using namespace std;
                     trick_winner = i;
                 }
                 ++j;
-            }
-
-            /* old code here
-            Card led_card = Players[current_player]->lead_card(trump);
-            trick.push_back(led_card);
-            cout << led_card << " led by " << *Players[current_player] << endl;
-            
-            current_player = player_to_left(current_player);
-            Card card2 = Players[current_player]->play_card(led_card, trump);
-            trick.push_back(card2);
-            cout << card2 << " played by " << *Players[current_player] << endl;
-
-            current_player = player_to_left(current_player);
-            Card card3 = Players[current_player]->play_card(led_card, trump);
-            trick.push_back(card3);
-            cout << card3 << " played by " << *Players[current_player] << endl;
-
-            current_player = player_to_left(current_player);
-            Card card4 = Players[current_player]->play_card(led_card, trump);
-            trick.push_back(card4);
-            cout << card4 << " played by " << *Players[current_player] << endl;
-
-
-            Card best_card = led_card;
-            int j = 0;
-            int trick_winner = leader;
-            for (int i = leader; j < 3; i = player_to_left(i)) {
-                if (Card_less(trick[j], trick[j + 1], trump)) {
-                    best_card = trick[j + 1];
-                    trick_winner = player_to_left(i);
-                }
-                ++j;
-            }
-            */
-            
+            }         
             cout << *Players[trick_winner] << " takes the trick" << endl << endl;
             return trick_winner;
         }
 
-        void score (int team1_tricks, int team2_tricks, int order_up_team, int &score1, int &score2) {
+        void score (int team1_tricks, int team2_tricks, 
+            int order_up_team, int &score1, int &score2) {
             if (order_up_team == 1) {
                 if (team1_tricks == 3 || team1_tricks == 4) {
-                    cout << *Players[0] << " and " << *Players[2] << " win the hand" << endl;
+                    cout << *Players[0] << " and " 
+                    << *Players[2] << " win the hand" << endl;
                     score1 += 1;
                 }
                 else if (team1_tricks == 5) {
                     score1 += 2;
-                    cout << *Players[0] << " and " << *Players[2] << " win the hand" << endl;
+                    cout << *Players[0] << " and " 
+                    << *Players[2] << " win the hand" << endl;
                     cout << "march!" << endl;
                 }
                 else {
                     score2 += 2;
-                    cout << *Players[1] << " and " << *Players[3] << " win the hand" << endl;
+                    cout << *Players[1] << " and " 
+                    << *Players[3] << " win the hand" << endl;
                     cout << "euchred!" << endl;
                 }
             }
             else if (order_up_team == 2) {
                 if (team2_tricks == 3 || team2_tricks == 4) {
-                    cout << *Players[1] << " and " << *Players[3] << " win the hand" << endl;
+                    cout << *Players[1] << " and " 
+                    << *Players[3] << " win the hand" << endl;
                     score2 += 1;
                 }
                 else if (team2_tricks == 5) {
                     score2 += 2;
-                    cout << *Players[1] << " and " << *Players[3] << " win the hand" << endl;
+                    cout << *Players[1] << " and " 
+                    << *Players[3] << " win the hand" << endl;
                     cout << "march!" << endl;
                 }
                 else {
                     score1 += 2;
-                    cout << *Players[0] << " and " << *Players[2] << " win the hand" << endl;
+                    cout << *Players[0] << " and " 
+                    << *Players[2] << " win the hand" << endl;
                     cout << "euchred!" << endl;
                 }
             }
@@ -295,8 +271,10 @@ int main(int argc, char* argv[]) {
     ifstream pack;
     pack.open(filename);
     Pack game_pack = Pack(pack);
-    cout << argv[0] << " " << argv[1] << " " << argv[2] << " " << argv[3] << " " << argv[4] 
-    << " " << argv[5] << " " << argv[6] << " " << argv[7] << " " << argv[8] << " " << argv[9] << " "
+    cout << argv[0] << " " << argv[1] 
+    << " " << argv[2] << " " << argv[3] << " " << argv[4] 
+    << " " << argv[5] << " " << argv[6] << " " 
+    << argv[7] << " " << argv[8] << " " << argv[9] << " "
     << argv[10] << " " << argv[11] << " " << endl;
     Game game(players, game_pack, points_to_win, shuffle_on);
     game.play();

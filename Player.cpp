@@ -22,7 +22,8 @@ public:
         sort(hand.begin(), hand.end());
     }
 
-    bool make_trump(const Card &upcard, bool is_dealer, int round, Suit &order_up_suit) const {
+    bool make_trump(const Card &upcard, bool is_dealer, 
+        int round, Suit &order_up_suit) const {
         assert(round == 1 || round == 2);
         if (round == 1) {
             int count = 0;
@@ -81,11 +82,13 @@ public:
                         highest_card = hand[i];
                         index = i;
                     }
-                    else if (hand[i].is_left_bower(trump) && !highest_card.is_right_bower(trump)) {
+                    else if (hand[i].is_left_bower(trump) 
+                    && !highest_card.is_right_bower(trump)) {
                         highest_card = hand[i];
                         index = i;
                     }
-                    else if (hand[i] > highest_card && !highest_card.is_left_bower(trump) && 
+                    else if (hand[i] > highest_card 
+                        && !highest_card.is_left_bower(trump) && 
                     !highest_card.is_right_bower(trump)) {
                         highest_card = hand[i];
                         index = i;
