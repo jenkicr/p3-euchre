@@ -45,26 +45,24 @@ public:
                 order_up_suit = Suit_next(upcard.get_suit());
                 return true;
             }
+            int count = 0;
+            for (int i = 0; i < hand.size(); ++i) {
+                if (hand[i].is_face_or_ace() 
+                && hand[i].is_trump(Suit_next(upcard.get_suit()))) {
+                    count++;
+                }
+            }
+            if (count >= 1) {
+                order_up_suit = Suit_next(upcard.get_suit());
+                return true;
+            }
             else {
-                int count = 0;
-                for (int i = 0; i < hand.size(); ++i) {
-                    if (hand[i].is_face_or_ace() 
-                    && hand[i].is_trump(Suit_next(upcard.get_suit()))) {
-                        count++;
-                    }
-                }
-                if (count >= 1) {
-                    order_up_suit = Suit_next(upcard.get_suit());
-                    return true;
-                }
-                else {
-                    return false;
-                }
+                return false;
             }
         }
         return false;
     }
-
+    
     Card play_card(const Card &led_card, Suit trump) {
         assert(hand.size() >= 1);
         int count_same_suit = 0;
@@ -77,27 +75,29 @@ public:
         if (count_same_suit > 0) {
             Card highest_card;
             for (int i = 0; i < hand.size(); i++) {
-                if (hand[i].get_suit(trump) == led_card.get_suit(trump)) {
-                    if (hand[i].is_right_bower(trump)) {
-                        highest_card = hand[i];
-                        index = i;
-                    }
-                    else if (hand[i].is_left_bower(trump) 
-                    && !highest_card.is_right_bower(trump)) {
-                        highest_card = hand[i];
-                        index = i;
-                    }
-                    else if (hand[i] > highest_card 
-                        && !highest_card.is_left_bower(trump) && 
-                    !highest_card.is_right_bower(trump)) {
-                        highest_card = hand[i];
-                        index = i;
-                    }
+                if (hand[i].get_suit(trump) == led_card.get_suit(trump) 
+                && hand[i].is_right_bower(trump)) {
+                    highest_card = hand[i];
+                    index = i;
+                }
+                else if (hand[i].get_suit(trump) == led_card.get_suit(trump) 
+                && hand[i].is_left_bower(trump) 
+                && !highest_card.is_right_bower(trump)) {
+                    highest_card = hand[i];
+                    index = i;
+                }
+                else if (hand[i].get_suit(trump) == led_card.get_suit(trump) 
+                && hand[i] > highest_card 
+                && !highest_card.is_left_bower(trump) 
+                && !highest_card.is_right_bower(trump)) {
+                    highest_card = hand[i];
+                    index = i;
                 }
             }
             hand.erase(hand.begin() + index);
             return highest_card;
         }
+        
         else {
             Card lowest_card = hand[0];
             int index = 0;
@@ -181,7 +181,8 @@ class HumanPlayer : public Player {
             print_hand();
             hand.push_back(upcard);
             cout << "Discard upcard: [-1]\n";
-            cout << "Human player " << name << ", please select a card to discard:\n" << endl;
+            cout << "Human player " << name << 
+            ", please select a card to discard:\n" << endl;
             int card_int;
             cin >> card_int;
             if (card_int == -1) {
@@ -196,7 +197,8 @@ class HumanPlayer : public Player {
         bool make_trump(const Card &upcard, bool is_dealer,
             int round, Suit &order_up_suit) const {
             print_hand();
-            cout << "Human player " << name << ", please enter a suit, or \"pass\":" << endl;
+            cout << "Human player " << name << 
+            ", please enter a suit, or \"pass\":" << endl;
             string suit_string;
             cin >> suit_string;
             if (suit_string == "pass") {

@@ -14,7 +14,7 @@ using namespace std;
         Pack pack;
         int points_to_win;
         bool shuffle_on;
-
+        
         int player_to_left(int player_number) {
             if (player_number == 3)
                 return 0;
@@ -41,21 +41,33 @@ using namespace std;
             }
         }
 
-        bool make_trump(int round, Suit &order_up_suit, 
+        bool make_trump_one(Suit &order_up_suit, 
             int &player, int dealer, Card upcard) {
             int j = 0;
             for (int i = player_to_left(dealer); j < 4; i = player_to_left(i)) {
                 bool is_dealer = j == 3;
-                if (Players[i]->make_trump(upcard, is_dealer, round, order_up_suit)) {
-                    if (round == 1) {
-                        cout << *Players[i] << " orders up " 
-                        << order_up_suit << endl << endl;
-                        Players[dealer]->add_and_discard(upcard);
-                    }
-                    else {
-                        cout << *Players[i] << " orders up " 
-                        << order_up_suit << endl << endl;
-                    }
+                if (Players[i]->make_trump(upcard, is_dealer, 1, order_up_suit)) {
+                    cout << *Players[i] << " orders up " 
+                    << order_up_suit << endl << endl;
+                    Players[dealer]->add_and_discard(upcard);
+                    j = 4;
+                    player = i;
+                    return true;
+                }
+                cout << *Players[i] << " passes" << endl;
+                ++j;
+            }
+            return false;
+        }
+
+        bool make_trump_two(Suit &order_up_suit, 
+            int &player, int dealer, Card upcard) {
+            int j = 0;
+            for (int i = player_to_left(dealer); j < 4; i = player_to_left(i)) {
+                bool is_dealer = j == 3;
+                if (Players[i]->make_trump(upcard, is_dealer, 2, order_up_suit)) {
+                    cout << *Players[i] << " orders up " 
+                    << order_up_suit << endl << endl;
                     j = 4;
                     player = i;
                     return true;
@@ -87,9 +99,10 @@ using namespace std;
             return trick_winner;
         }
 
-        void score (int team1_tricks, int team2_tricks, 
+        void score (int team1_tricks, 
             int order_up_team, int &score1, int &score2) {
-            if (order_up_team == 1) {
+                int team2_tricks = 5 - team1_tricks;
+                if (order_up_team == 1) {
                 if (team1_tricks == 3 || team1_tricks == 4) {
                     cout << *Players[0] << " and " 
                     << *Players[2] << " win the hand" << endl;
@@ -130,10 +143,24 @@ using namespace std;
             
         }
 
+        bool game_over(int score1, int score2) {
+            if (score1 >= points_to_win) {
+                cout << *Players[0] << " and " << *Players[2] << " win!" << endl;
+                return true;
+            }
+            if (score2 >= points_to_win) {
+                cout << *Players[1] << " and " << *Players[3] << " win!" << endl;
+                return true;
+            }
+            return false;
+        }
 
     public:
-        Game(vector<Player*> Players_in, Pack pack_in, int points_to_win_in, bool shuffle_on_in) 
-            : Players(Players_in), pack(pack_in), points_to_win(points_to_win_in), shuffle_on(shuffle_on_in) {}
+        Game(vector<Player*> Players_in, 
+            Pack pack_in, int points_to_win_in, bool shuffle_on_in) 
+            : Players(Players_in), pack(pack_in), 
+            points_to_win(points_to_win_in), 
+            shuffle_on(shuffle_on_in) {}
         
         void play() {
             int dealer = 0;
@@ -150,8 +177,8 @@ using namespace std;
                 int order_up_player;
                 Card upcard = pack.deal_one();
                 cout << upcard << " turned up" << endl;
-                if (!make_trump(1, order_up_suit, order_up_player, dealer, upcard)) {
-                    make_trump(2, order_up_suit, order_up_player, dealer, upcard);
+                if (!make_trump_one(order_up_suit, order_up_player, dealer, upcard)) {
+                    make_trump_two(order_up_suit, order_up_player, dealer, upcard);
                 }
                 int order_up_team;
                 if (order_up_player % 2 == 0) {
@@ -163,31 +190,23 @@ using namespace std;
                 
                 Suit &trump_suit = order_up_suit;
                 int team1_trickswon = 0;
-                int team2_trickswon = 0;
                 int leader = player_to_left(dealer);
                 for (int i = 0; i < 5; ++i) {
                     leader = play_trick(leader, trump_suit);
                     if (leader % 2 == 0) {
                         ++team1_trickswon;
                     }
-                    else {
-                       ++team2_trickswon;
-                    }
                 }
                 
-                score(team1_trickswon, team2_trickswon, order_up_team, team1_score, team2_score);
+                score(team1_trickswon, order_up_team, team1_score, team2_score);
 
-                cout << *Players[0] << " and " << *Players[2] << " have " << team1_score << " points" << endl;
-                cout << *Players[1] << " and " << *Players[3] << " have " << team2_score << " points" << endl << endl;
-                if (team1_score >= points_to_win) {
-                    game_end = true;
-                    cout << *Players[0] << " and " << *Players[2] << " win!" << endl;
-                }
-                if (team2_score >= points_to_win) {
-                    game_end = true;
-                    cout << *Players[1] << " and " << *Players[3] << " win!" << endl;
-                }
+                cout << *Players[0] << " and " << *Players[2] 
+                << " have " << team1_score << " points" << endl;
+                cout << *Players[1] << " and " << *Players[3] 
+                << " have " << team2_score << " points" << endl << endl;
 
+                game_end = game_over(team1_score, team2_score);
+                
                 dealer = player_to_left(dealer);
                 pack.reset();
                 hand_count++;

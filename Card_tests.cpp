@@ -102,7 +102,7 @@ TEST(test_card_less) {
     ASSERT_TRUE(Card_less(c1, c3, DIAMONDS));
     ASSERT_TRUE(Card_less(c3, c4, SPADES));
     ASSERT_TRUE(Card_less(c1, c3, HEARTS));
-    ASSERT_FALSE(Card_less(c4, c5, HEARTS));
+    ASSERT_TRUE(Card_less(c4, c5, HEARTS));
 }
 
 TEST(test_card_less_led) {
